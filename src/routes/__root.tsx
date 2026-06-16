@@ -14,6 +14,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { SITE } from "@/lib/site";
+import { AuthProvider } from "@/hooks/use-auth";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -125,12 +127,15 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <SiteHeader />
-      <main id="main">
-        <Outlet />
-      </main>
-      <SiteFooter />
-      <WhatsAppButton />
+      <AuthProvider>
+        <SiteHeader />
+        <main id="main">
+          <Outlet />
+        </main>
+        <SiteFooter />
+        <WhatsAppButton />
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
