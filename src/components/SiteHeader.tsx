@@ -1,13 +1,23 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X, Moon, Sun } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import crest from "@/assets/crest.png";
 import { NAV, SITE } from "@/lib/site";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const saved = localStorage.getItem("slc-theme");
@@ -62,6 +72,33 @@ export function SiteHeader() {
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="hidden sm:grid h-9 w-9 place-items-center rounded-full bg-accent/15 text-accent text-sm font-semibold border border-accent/30">
+                  {(user.user_metadata?.full_name ?? user.email ?? "U").toString().charAt(0).toUpperCase()}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard"><LayoutDashboard className="mr-2 h-4 w-4" />Dashboard</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/profile"><UserIcon className="mr-2 h-4 w-4" />Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Link to="/auth">Sign in</Link>
+            </Button>
+          )}
           <Button asChild variant="gold" size="sm" className="hidden sm:inline-flex">
             <Link to="/admissions">Apply Now</Link>
           </Button>
@@ -91,6 +128,15 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            {user ? (
+              <>
+                <Link to="/dashboard" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary">Dashboard</Link>
+                <Link to="/profile" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary">Profile</Link>
+                <button onClick={() => { signOut(); setOpen(false); }} className="rounded-md px-3 py-2.5 text-left text-sm font-medium hover:bg-secondary">Sign out</button>
+              </>
+            ) : (
+              <Link to="/auth" onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary">Sign in</Link>
+            )}
             <Button asChild variant="gold" className="mt-2">
               <Link to="/admissions" onClick={() => setOpen(false)}>Apply Now</Link>
             </Button>
