@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 import { BookOpen, GraduationCap, Shield, Video, FileText, Award, Users, BarChart3 } from "lucide-react";
 import { SITE } from "@/lib/site";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: `Dashboard — ${SITE.name}` }] }),
@@ -30,7 +33,7 @@ function Dashboard() {
           <Link to="/profile" className="text-sm font-medium text-accent hover:underline">View profile →</Link>
         </div>
 
-        {role === "student" && <StudentPanel />}
+        {role === "student" && <StudentPanel userId={user!.id} />}
         {role === "teacher" && <TeacherPanel />}
         {role === "admin" && <AdminPanel />}
       </div>
@@ -38,7 +41,7 @@ function Dashboard() {
   );
 }
 
-function Card({ icon: Icon, title, value, hint }: { icon: any; title: string; value: string; hint?: string }) {
+function Card({ icon: Icon, title, value, hint }: { icon: any; title: string; value: string | number; hint?: string }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       <div className="flex items-center gap-3">
@@ -53,26 +56,51 @@ function Card({ icon: Icon, title, value, hint }: { icon: any; title: string; va
   );
 }
 
-function StudentPanel() {
+function StudentPanel({ userId }: { userId: string }) {
+  const [stats, setStats] = useState({ enrolled: 0, certificates: 0, completed: 0 });
+  useEffect(() => {
+    (async () => {
+      const [{ count: enrolled }, { count: certificates }, { count: completed }] = await Promise.all([
+        supabase.from("enrollments").select("*", { count: "exact", head: true }).eq("user_id", userId),
+        supabase.from("certificates").select("*", { count: "exact", head: true }).eq("user_id", userId),
+        supabase.from("enrollments").select("*", { count: "exact", head: true }).eq("user_id", userId).not("completed_at", "is", null),
+      ]);
+      setStats({ enrolled: enrolled ?? 0, certificates: certificates ?? 0, completed: completed ?? 0 });
+    })();
+  }, [userId]);
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card icon={BookOpen} title="Enrolled courses" value="0" hint="Browse the catalog to enroll." />
-      <Card icon={Video} title="Upcoming classes" value="0" hint="Live sessions appear here." />
-      <Card icon={FileText} title="Assignments due" value="0" hint="Coming soon." />
-      <Card icon={Award} title="Certificates" value="0" hint="Earned after course completion." />
-      <div className="md:col-span-2 lg:col-span-4 rounded-xl border border-dashed border-border bg-card p-6 text-sm text-muted-foreground">
-        Your learning workspace is ready. Course enrollment, live sessions, assignments and certificates will plug in here as we roll out the next phases.
+    <>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card icon={BookOpen} title="Enrolled courses" value={stats.enrolled} />
+        <Card icon={Video} title="Completed" value={stats.completed} />
+        <Card icon={FileText} title="Active learning" value={Math.max(stats.enrolled - stats.completed, 0)} />
+        <Card icon={Award} title="Certificates" value={stats.certificates} />
       </div>
-    </div>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <Link to="/my-courses" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
+          <div className="font-display text-lg font-semibold">My Learning →</div>
+          <p className="mt-1 text-sm text-muted-foreground">Continue your enrolled courses.</p>
+        </Link>
+        <Link to="/catalog" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
+          <div className="font-display text-lg font-semibold">Browse Catalog →</div>
+          <p className="mt-1 text-sm text-muted-foreground">Discover new courses to enroll in.</p>
+        </Link>
+        <Link to="/certificates" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
+          <div className="font-display text-lg font-semibold">My Certificates →</div>
+          <p className="mt-1 text-sm text-muted-foreground">View and share your achievements.</p>
+        </Link>
+      </div>
+    </>
   );
 }
 
 function TeacherPanel() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card icon={GraduationCap} title="Active classes" value="0" />
-      <Card icon={Users} title="Students" value="0" />
-      <Card icon={FileText} title="Submissions" value="0" />
+      <Card icon={GraduationCap} title="Active classes" value="—" />
+      <Card icon={Users} title="Students" value="—" />
+      <Card icon={FileText} title="Submissions" value="—" />
       <Card icon={Video} title="Next session" value="—" />
     </div>
   );
@@ -84,7 +112,7 @@ function AdminPanel() {
       <Card icon={Users} title="Total users" value="—" />
       <Card icon={BookOpen} title="Courses" value="—" />
       <Card icon={BarChart3} title="Enrollments" value="—" />
-      <Card icon={Shield} title="Pending approvals" value="0" />
+      <Card icon={Shield} title="Pending" value="—" />
     </div>
   );
 }
