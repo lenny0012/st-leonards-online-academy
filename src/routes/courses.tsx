@@ -24,6 +24,17 @@ function Courses() {
     <>
       <PageHeader eyebrow="Catalogue" title="Find your next course." intro="From Cambridge IGCSE and KCSE revision to industry certifications — there's a path here for every learner." />
 
+      <section className="container-x py-8">
+        <div className="rounded-2xl border border-accent/40 bg-gradient-to-r from-accent/10 via-card to-card p-6 md:p-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="font-display text-xl md:text-2xl font-semibold">Ready to start learning?</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Enroll in our self-paced online courses with lessons, quizzes and certificates.</p>
+          </div>
+          <Button asChild variant="gold"><Link to="/catalog">Browse online courses →</Link></Button>
+        </div>
+      </section>
+
+
       <section className="container-x section-y">
         <div className="mb-10 flex flex-wrap gap-2">
           {CATEGORIES.map(c => (
