@@ -77,10 +77,14 @@ function StudentPanel({ userId }: { userId: string }) {
         <Card icon={FileText} title="Active learning" value={Math.max(stats.enrolled - stats.completed, 0)} />
         <Card icon={Award} title="Certificates" value={stats.certificates} />
       </div>
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
+      <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Link to="/my-courses" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
           <div className="font-display text-lg font-semibold">My Learning →</div>
           <p className="mt-1 text-sm text-muted-foreground">Continue your enrolled courses.</p>
+        </Link>
+        <Link to="/live" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
+          <div className="font-display text-lg font-semibold">Live Classes →</div>
+          <p className="mt-1 text-sm text-muted-foreground">Join Zoom & Meet sessions.</p>
         </Link>
         <Link to="/catalog" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
           <div className="font-display text-lg font-semibold">Browse Catalog →</div>
@@ -97,12 +101,24 @@ function StudentPanel({ userId }: { userId: string }) {
 
 function TeacherPanel() {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card icon={GraduationCap} title="Active classes" value="—" />
-      <Card icon={Users} title="Students" value="—" />
-      <Card icon={FileText} title="Submissions" value="—" />
-      <Card icon={Video} title="Next session" value="—" />
-    </div>
+    <>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card icon={GraduationCap} title="Active classes" value="—" />
+        <Card icon={Users} title="Students" value="—" />
+        <Card icon={FileText} title="Submissions" value="—" />
+        <Card icon={Video} title="Next session" value="—" />
+      </div>
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <Link to="/teach/live" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
+          <div className="font-display text-lg font-semibold">Schedule Live Class →</div>
+          <p className="mt-1 text-sm text-muted-foreground">Post Zoom or Google Meet sessions for your students.</p>
+        </Link>
+        <Link to="/live" className="rounded-xl border border-border bg-card p-5 transition hover:border-accent/60">
+          <div className="font-display text-lg font-semibold">Upcoming Sessions →</div>
+          <p className="mt-1 text-sm text-muted-foreground">See all live classes happening soon.</p>
+        </Link>
+      </div>
+    </>
   );
 }
 
