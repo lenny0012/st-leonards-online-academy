@@ -28,8 +28,10 @@ import { Route as VerifyNumberRouteImport } from './routes/verify.$number'
 import { Route as CatalogSlugRouteImport } from './routes/catalog.$slug'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedMyCoursesRouteImport } from './routes/_authenticated/my-courses'
+import { Route as AuthenticatedLiveRouteImport } from './routes/_authenticated/live'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCertificatesRouteImport } from './routes/_authenticated/certificates'
+import { Route as AuthenticatedTeachLiveRouteImport } from './routes/_authenticated/teach.live'
 import { Route as AuthenticatedLearnSlugRouteImport } from './routes/_authenticated/learn.$slug'
 
 const TermsRoute = TermsRouteImport.update({
@@ -126,6 +128,11 @@ const AuthenticatedMyCoursesRoute = AuthenticatedMyCoursesRouteImport.update({
   path: '/my-courses',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedLiveRoute = AuthenticatedLiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -137,6 +144,11 @@ const AuthenticatedCertificatesRoute =
     path: '/certificates',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTeachLiveRoute = AuthenticatedTeachLiveRouteImport.update({
+  id: '/teach/live',
+  path: '/teach/live',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedLearnSlugRoute = AuthenticatedLearnSlugRouteImport.update({
   id: '/learn/$slug',
   path: '/learn/$slug',
@@ -159,12 +171,14 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/certificates': typeof AuthenticatedCertificatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/live': typeof AuthenticatedLiveRoute
   '/my-courses': typeof AuthenticatedMyCoursesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/catalog/$slug': typeof CatalogSlugRoute
   '/verify/$number': typeof VerifyNumberRoute
   '/catalog/': typeof CatalogIndexRoute
   '/learn/$slug': typeof AuthenticatedLearnSlugRoute
+  '/teach/live': typeof AuthenticatedTeachLiveRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -181,12 +195,14 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/certificates': typeof AuthenticatedCertificatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/live': typeof AuthenticatedLiveRoute
   '/my-courses': typeof AuthenticatedMyCoursesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/catalog/$slug': typeof CatalogSlugRoute
   '/verify/$number': typeof VerifyNumberRoute
   '/catalog': typeof CatalogIndexRoute
   '/learn/$slug': typeof AuthenticatedLearnSlugRoute
+  '/teach/live': typeof AuthenticatedTeachLiveRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,12 +222,14 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/certificates': typeof AuthenticatedCertificatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/live': typeof AuthenticatedLiveRoute
   '/_authenticated/my-courses': typeof AuthenticatedMyCoursesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/catalog/$slug': typeof CatalogSlugRoute
   '/verify/$number': typeof VerifyNumberRoute
   '/catalog/': typeof CatalogIndexRoute
   '/_authenticated/learn/$slug': typeof AuthenticatedLearnSlugRoute
+  '/_authenticated/teach/live': typeof AuthenticatedTeachLiveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -231,12 +249,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/certificates'
     | '/dashboard'
+    | '/live'
     | '/my-courses'
     | '/profile'
     | '/catalog/$slug'
     | '/verify/$number'
     | '/catalog/'
     | '/learn/$slug'
+    | '/teach/live'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -253,12 +273,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/certificates'
     | '/dashboard'
+    | '/live'
     | '/my-courses'
     | '/profile'
     | '/catalog/$slug'
     | '/verify/$number'
     | '/catalog'
     | '/learn/$slug'
+    | '/teach/live'
   id:
     | '__root__'
     | '/'
@@ -277,12 +299,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/certificates'
     | '/_authenticated/dashboard'
+    | '/_authenticated/live'
     | '/_authenticated/my-courses'
     | '/_authenticated/profile'
     | '/catalog/$slug'
     | '/verify/$number'
     | '/catalog/'
     | '/_authenticated/learn/$slug'
+    | '/_authenticated/teach/live'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -438,6 +462,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMyCoursesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/live': {
+      id: '/_authenticated/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof AuthenticatedLiveRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -450,6 +481,13 @@ declare module '@tanstack/react-router' {
       path: '/certificates'
       fullPath: '/certificates'
       preLoaderRoute: typeof AuthenticatedCertificatesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/teach/live': {
+      id: '/_authenticated/teach/live'
+      path: '/teach/live'
+      fullPath: '/teach/live'
+      preLoaderRoute: typeof AuthenticatedTeachLiveRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/learn/$slug': {
@@ -465,17 +503,21 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCertificatesRoute: typeof AuthenticatedCertificatesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedLiveRoute: typeof AuthenticatedLiveRoute
   AuthenticatedMyCoursesRoute: typeof AuthenticatedMyCoursesRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedLearnSlugRoute: typeof AuthenticatedLearnSlugRoute
+  AuthenticatedTeachLiveRoute: typeof AuthenticatedTeachLiveRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCertificatesRoute: AuthenticatedCertificatesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedLiveRoute: AuthenticatedLiveRoute,
   AuthenticatedMyCoursesRoute: AuthenticatedMyCoursesRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedLearnSlugRoute: AuthenticatedLearnSlugRoute,
+  AuthenticatedTeachLiveRoute: AuthenticatedTeachLiveRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -514,13 +556,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
