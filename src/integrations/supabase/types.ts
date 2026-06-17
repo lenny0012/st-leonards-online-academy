@@ -244,6 +244,62 @@ export type Database = {
           },
         ]
       }
+      live_classes: {
+        Row: {
+          course_id: string
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          host_id: string
+          id: string
+          join_url: string
+          meeting_id: string | null
+          passcode: string | null
+          provider: Database["public"]["Enums"]["meeting_provider"]
+          starts_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          host_id: string
+          id?: string
+          join_url: string
+          meeting_id?: string | null
+          passcode?: string | null
+          provider?: Database["public"]["Enums"]["meeting_provider"]
+          starts_at: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          host_id?: string
+          id?: string
+          join_url?: string
+          meeting_id?: string | null
+          passcode?: string | null
+          provider?: Database["public"]["Enums"]["meeting_provider"]
+          starts_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_classes_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -463,6 +519,7 @@ export type Database = {
     }
     Enums: {
       app_role: "student" | "teacher" | "admin"
+      meeting_provider: "zoom" | "meet"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -591,6 +648,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["student", "teacher", "admin"],
+      meeting_provider: ["zoom", "meet"],
     },
   },
 } as const
