@@ -4,9 +4,9 @@ export const SITE = {
   tagline: "Learn Without Limits",
   description:
     "St Leonards College delivers world-class online education, tuition, professional training and certification programs for students worldwide.",
-  email: "info@stleonardscollege.ac",
-  phone: "+254 700 000 000",
-  whatsapp: "254700000000",
+  email: "leonardnzivu21@gmail.com",
+  phone: "+254 740184075",
+  whatsapp: "254769103592",
   address: "Online · Serving students worldwide",
 };
 
